@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Task Manager</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<main class="app">
+
+  <header class="app__header">
+    <h1 class="app__title">Task Manager</h1>
+    <div class="top-row">
+      <div class="clock" id="clock">12:00 am</div>
+      <div class="task-summary">Remaining tomorrow: <span id="pendingNextCount">0</span></div>
+    </div>
+    <p class="app__rule"></p>
+    <p class="app__subtitle">Write it down. Cross it off.</p>
+  </header>
+
+  <form class="add-form" id="addForm">
+    <input
+      type="text"
+      id="taskInput"
+      class="add-form__input"
+      placeholder="Add your task"
+      autocomplete="off"
+      maxlength="120"
+    />
+    <button type="submit" class="add-form__btn">Add</button>
+  </form>
+
+  <nav class="filters" id="filters" aria-label="Filter tasks">
+    <button class="filter-btn" data-filter="all" type="button">
+      All <span class="filter-btn__count" id="countAll">0</span>
+    </button>
+    <button class="filter-btn is-active" data-filter="pending" type="button">
+      Pending <span class="filter-btn__count" id="countPending">0</span>
+    </button>
+    <button class="filter-btn" data-filter="completed" type="button">
+      Completed <span class="filter-btn__count" id="countCompleted">0</span>
+    </button>
+  </nav>
+
+  <div class="toolbar">
+    <button type="button" class="reset-btn" id="resetBtn">Reset Tasks</button>
+  </div>
+
+  <ul class="task-list" id="taskList"></ul>
+
+  <p class="empty-state" id="emptyState" hidden>Nothing here yet.</p>
+
+</main>
+
+<script src="js/script.js"></script>
+</body>
+</html>
