@@ -19,6 +19,7 @@ var resetBtn = document.getElementById("resetBtn");
 var countAllEl = document.getElementById("countAll");
 var countPendingEl = document.getElementById("countPending");
 var countCompletedEl = document.getElementById("countCompleted");
+var remoteApiUrl = "https://jsonplaceholder.typicode.com/todos?_limit=3";
 
 function loadTasks() {
   var raw = localStorage.getItem("todoTasks");
@@ -47,6 +48,40 @@ function loadTasks() {
   } catch (e) {
     console.log("Could not load tasks", e);
   }
+}
+
+function fetchRemoteTasks(callback) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("GET", remoteApiUrl, true);
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState !== 4) {
+      return;
+    }
+    if (xhr.status === 200) {
+      try {
+        var data = JSON.parse(xhr.responseText);
+        if (Array.isArray(data)) {
+          for (var i = 0; i < data.length; i += 1) {
+            var item = data[i];
+            if (typeof item.title === "string") {
+              tasks.push({ id: nextId, text: item.title, completed: item.completed === true });
+              nextId += 1;
+            }
+          }
+          saveTasks();
+          render();
+        }
+      } catch (e) {
+        console.log("Remote tasks parse error", e);
+      }
+    } else {
+      console.log("Remote tasks fetch failed", xhr.status);
+    }
+    if (typeof callback === "function") {
+      callback();
+    }
+  };
+  xhr.send();
 }
 
 function saveTasks() {
@@ -255,6 +290,13 @@ resetBtn.addEventListener("click", function () {
 });
 
 loadTasks();
-render();
-updateClock();
-setInterval(updateClock, 60000);
+if (tasks.length === 0) {
+  fetchRemoteTasks(function () {
+    updateClock();
+    setInterval(updateClock, 60000);
+  });
+} else {
+  render();
+  updateClock();
+  setInterval(updateClock, 60000);
+}
